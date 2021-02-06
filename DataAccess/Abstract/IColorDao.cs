@@ -5,11 +5,7 @@ using System.Text;
 
 namespace DataAccess.Abstract
 {
-   public interface ICarDao:IEntityRepository<Car>
+   public interface IColorDao:IEntityRepository<Color>
     {
-        
     }
 }
-
-    
-

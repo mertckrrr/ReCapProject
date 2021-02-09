@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace DataAccess.Concrete.InMemory
+namespace Core.Entities
 {
-    class InMemoryColorDao
+    public interface IEntity
     {
     }
 }

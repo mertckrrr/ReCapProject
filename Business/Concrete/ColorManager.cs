@@ -9,37 +9,36 @@ namespace Business.Concrete
 {
     public class ColorManager : IColorService
     {
-        IColorDao _colorDao;
+        IColorDal _colorDal;
 
-        public ColorManager(IColorDao brandDao)
+        public ColorManager(IColorDal colorDal)
         {
-            _colorDao = brandDao;
+            _colorDal = colorDal;
         }
 
-        public void Add(Color entity)
+        public void Add(Color color)
         {
-            _colorDao.Add(entity);
+            _colorDal.Add(color);
         }
 
         public void Delete(Color color)
         {
-            _colorDao.Delete(color);
+            _colorDal.Delete(color);
         }
 
         public List<Color> GetAll()
         {
-            return _colorDao.GetAll();
-
+            return _colorDal.GetAll();
         }
 
-        public Color GetById(int id)
+        public Color GetById(int colorId)
         {
-            return _colorDao.Get(c => c.ColorId == id);
+            throw new NotImplementedException("Bu kısım Güncellenecek");
         }
 
-        public void Update(Color entity)
+        public void Update(Color color)
         {
-            _colorDao.Update(entity);
+            _colorDal.Update(color);
         }
     }
 }

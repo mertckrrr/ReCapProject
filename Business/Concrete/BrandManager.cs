@@ -9,55 +9,36 @@ namespace Business.Concrete
 {
     public class BrandManager : IBrandService
     {
-        IBrandDao _brandDao;
+        IBrandDal _brandDal;
 
-        public BrandManager(IBrandDao brandDao)
+        public BrandManager(IBrandDal brandDal)
         {
-            _brandDao = brandDao;
+            _brandDal = brandDal;
         }
 
         public void Add(Brand brand)
         {
-            if (brand.BrandName.Length > 2)
-            {
-                _brandDao.Add(brand);
-                Console.WriteLine("Marka başarıyla eklendi.");
-            }
-            else
-            {
-                Console.WriteLine($"Lütfen marka isminin uzunluğunu 2 karakterden fazla giriniz. Girdiğiniz marka ismi : {brand.BrandName}");
-            }
+            _brandDal.Add(brand);
         }
 
         public void Delete(Brand brand)
         {
-            _brandDao.Delete(brand);
-            Console.WriteLine("Marka başarıyla silindi.");
-
+            _brandDal.Delete(brand);
         }
 
         public List<Brand> GetAll()
         {
-            return _brandDao.GetAll();
+            return _brandDal.GetAll();
         }
 
-        public Brand GetById(int id)
+        public Brand GetById(int brandId)
         {
-            return _brandDao.Get(c => c.BrandId == id);
+            throw new NotImplementedException("Bu kısım Güncellenecek");
         }
 
         public void Update(Brand brand)
         {
-            if (brand.BrandName.Length >= 2)
-            {
-                _brandDao.Update(brand);
-                Console.WriteLine("Marka başarıyla Güncellendi.");
-            }
-            else
-            {
-                Console.WriteLine($"Lütfen marka isminin uzunluğunu 1 karakterden fazla giriniz. Girdiğiniz marka ismi : {brand.BrandName}");
-            }
-
+            _brandDal.Update(brand);
         }
     }
 }

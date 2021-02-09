@@ -1,6 +1,7 @@
 ﻿using Business.Abstract;
 using DataAccess.Abstract;
 using Entities.Concrete;
+using Entities.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -9,76 +10,42 @@ namespace Business.Concrete
 {
     public class CarManager : ICarService
     {
-        ICarDao _carDao;
-
-        public CarManager(ICarDao carDao)
+        ICarDal _carDal;
+        public CarManager(ICarDal carDal)
         {
-            _carDao = carDao;
+            _carDal = carDal;
         }
 
-        public void Add(Car car)
+        public void AddedCar(Car car)
         {
-            if (car.DailyPrice > 0)
+            if (car.Description.Length >= 2 && car.DailyPrice > 0)
             {
-                _carDao.Add(car);
-                Console.WriteLine("Araba başarıyla eklendi.");
+                _carDal.Add(car);
             }
             else
             {
-                Console.WriteLine($"Lütfen günlük fiyat kısmını 0'dan büyük giriniz. Girdiğiniz değer : {car.DailyPrice}");
+                Console.WriteLine("Description 2 karakterden fazla ve Dailyprice 0 dan büyük olmalı");
             }
-        }
-
-        public void Delete(Car car)
-        {
-            _carDao.Delete(car);
-            Console.WriteLine("Araba başarıyla silindi.");
-
         }
 
         public List<Car> GetAll()
         {
-            return _carDao.GetAll();
+            return _carDal.GetAll();
         }
 
-        public List<Car> GetAllByBrandId(int id)
+        public List<CarDetailDto> GetCarDetails()
         {
-            return _carDao.GetAll(c => c.BrandId == id);
+            return _carDal.GetCarDetails();
         }
 
-        public List<Car> GetAllByColorId(int id)
+        public List<Car> GetCarsByBrandId(int brandId)
         {
-            return _carDao.GetAll(c => c.ColorId == id);
-
+            return _carDal.GetAll(c => c.BrandId == brandId);
         }
 
-        public List<Car> GetByDailyPrice(decimal min, decimal max)
+        public List<Car> GetCarsByColorId(int colorId)
         {
-            return _carDao.GetAll(c => c.DailyPrice >= min && c.DailyPrice <= max);
-
-        }
-
-        public Car GetById(int id)
-        {
-            return _carDao.Get(c => c.CarId == id);
-        }
-
-        public List<Car> GetByModelYear(string year)
-        {
-            return _carDao.GetAll(c => c.ModelYear.Contains(year) == true);
-        }
-
-        public void Update(Car car)
-        {
-            if (car.DailyPrice > 0)
-            {
-                _carDao.Update(car);
-                Console.WriteLine("Araba başarıyla güncellendi.");
-            }
-            else
-            {
-                Console.WriteLine($"Lütfen günlük fiyat kısmını 0'dan büyük giriniz. Girdiğiniz değer : {car.DailyPrice}");
-            }
+            return _carDal.GetAll(c => c.ColorId == colorId);
         }
     }
 }

@@ -12,9 +12,9 @@ namespace DataAccess.Concrete.EntityFramework
         {
             optionsBuilder.UseSqlServer(@"Server=(localdb)\MSSQLLocalDB;Database=ReCapProjectDb;Trusted_Connection=true");
         }
-        public virtual DbSet<Car> Cars { get; set; }
-        public virtual DbSet<Brand> Brands { get; set; }
-        public virtual DbSet<Color> Colors { get; set; }
+        public  DbSet<Car> Cars { get; set; }
+        public  DbSet<Brand> Brands { get; set; }
+        public  DbSet<Color> Colors { get; set; }
 
     }
 }

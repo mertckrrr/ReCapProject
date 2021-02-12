@@ -1,4 +1,6 @@
 ﻿using Business.Abstract;
+using Business.Constants;
+using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
 using System;
@@ -10,35 +12,45 @@ namespace Business.Concrete
     public class BrandManager : IBrandService
     {
         IBrandDal _brandDal;
-
         public BrandManager(IBrandDal brandDal)
         {
             _brandDal = brandDal;
         }
-
-        public void Add(Brand brand)
+        public IResult Add(Brand brand)
         {
-            _brandDal.Add(brand);
+            if (brand.BrandName.Length > 2)
+            {
+                _brandDal.Add(brand);
+                return new SuccessResult(Messages.BrandAdded);
+            }
+            return new ErrorResult(Messages.BrandNameInvalid);
+
         }
 
-        public void Delete(Brand brand)
+        public IResult Delete(Brand brand)
         {
             _brandDal.Delete(brand);
+            return new SuccessResult(Messages.BrandDeleted);
         }
 
-        public List<Brand> GetAll()
+        public IDataResult<List<Brand>> GetAll()
         {
-            return _brandDal.GetAll();
+            return new SuccessDataResult<List<Brand>>(_brandDal.GetAll());
         }
 
-        public Brand GetById(int brandId)
+        public IDataResult<Brand> GetById(int id)
         {
-            throw new NotImplementedException("Bu kısım Güncellenecek");
+            return new SuccessDataResult<Brand>(_brandDal.GetById(p => p.BrandId == id));
         }
 
-        public void Update(Brand brand)
+        public IResult Update(Brand brand)
         {
-            _brandDal.Update(brand);
+            if (brand.BrandName.Length > 2)
+            {
+                _brandDal.Update(brand);
+                return new SuccessResult(Messages.BrandUpdated);
+            }
+            return new ErrorResult(Messages.BrandNameInvalid);
         }
     }
 }

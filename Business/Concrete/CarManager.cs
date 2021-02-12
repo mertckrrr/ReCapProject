@@ -1,5 +1,8 @@
 ﻿using Business.Abstract;
+using Business.Constants;
+using Core.Utilities.Results;
 using DataAccess.Abstract;
+using DataAccess.Concrete.InMemory;
 using Entities.Concrete;
 using Entities.DTOs;
 using System;
@@ -11,41 +14,58 @@ namespace Business.Concrete
     public class CarManager : ICarService
     {
         ICarDal _carDal;
+
         public CarManager(ICarDal carDal)
         {
             _carDal = carDal;
         }
 
-        public void AddedCar(Car car)
+        public IResult Add(Car car)
         {
-            if (car.Description.Length >= 2 && car.DailyPrice > 0)
+            if (car.DailyPrice > 0)
             {
                 _carDal.Add(car);
+
+                return new SuccessResult(Messages.CarAdded);
             }
-            else
+
+
+            return new ErrorResult(Messages.DailyPriceInvalid);
+
+
+
+        }
+
+        public IResult Delete(Car car)
+        {
+            _carDal.Delete(car);
+            return new SuccessResult(Messages.CarDeleted);
+        }
+
+        public IDataResult<List<Car>> GetAll()
+        {
+
+            return new SuccessDataResult<List<Car>>(_carDal.GetAll());
+        }
+
+        public IDataResult<Car> GetById(int id)
+        {
+            return new SuccessDataResult<Car>(_carDal.GetById(p => p.CarId == id));
+        }
+
+        public IDataResult<List<CarDetailDto>> GetCarDetails()
+        {
+            return new SuccessDataResult<List<CarDetailDto>>(_carDal.GetCarDetails());
+        }
+
+        public IResult Update(Car car)
+        {
+            if (car.DailyPrice > 0)
             {
-                Console.WriteLine("Description 2 karakterden fazla ve Dailyprice 0 dan büyük olmalı");
+                _carDal.Update(car);
+                return new SuccessResult(Messages.CarUpdated);
             }
-        }
-
-        public List<Car> GetAll()
-        {
-            return _carDal.GetAll();
-        }
-
-        public List<CarDetailDto> GetCarDetails()
-        {
-            return _carDal.GetCarDetails();
-        }
-
-        public List<Car> GetCarsByBrandId(int brandId)
-        {
-            return _carDal.GetAll(c => c.BrandId == brandId);
-        }
-
-        public List<Car> GetCarsByColorId(int colorId)
-        {
-            return _carDal.GetAll(c => c.ColorId == colorId);
+            return new ErrorResult(Messages.DailyPriceInvalid);
         }
     }
 }

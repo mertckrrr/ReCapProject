@@ -10,102 +10,60 @@ namespace ConsoleUI
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Araba Markaları:\n");
-            BrandGetAll();
-            Console.WriteLine("-------------------------");
-            Console.WriteLine("Renkler:\n");
-            ColorGetAll();
-            Console.WriteLine("-------------------------");
-            Console.WriteLine("Kiralanabilir Araba Detayları:\n");
-            GetCarDetailsTest();
-        }
-
-        private static void CarAddTest()
-        {
             CarManager carManager = new CarManager(new EfCarDal());
-            var result = carManager.Add(new Car { ColorId = 5, BrandId = 2002, ModelYear = 2018, DailyPrice = 450, Description = "Otomatik sedan" });
-            if (result.Success)
-            {
-                Console.WriteLine(result.Message + "\n");
-
-                GetCarDetailsTest();
-            }
-            else
-            {
-                Console.WriteLine(result.Message + "\n");
-
-                GetCarDetailsTest();
-            }
-        }
-
-        private static void BrandAddTest()
-        {
             BrandManager brandManager = new BrandManager(new EfBrandDal());
-            var result = brandManager.Add(new Brand { BrandName = "m" });
-            if (result.Success)
-            {
-                Console.WriteLine(result.Message);
-                BrandGetAll();
-            }
-            else
-            {
-                Console.WriteLine(result.Message);
-                BrandGetAll();
-            }
-        }
-
-        private static void BrandGetAll()
-        {
-            BrandManager brandManager = new BrandManager(new EfBrandDal());
-            var result = brandManager.GetAll();
-            if (result.Success)
-            {
-                foreach (var brand in result.Data)
-                {
-                    Console.WriteLine(brand.BrandName);
-                }
-            }
-            else
-            {
-                Console.WriteLine(result.Message);
-            }
-        }
-
-        private static void ColorGetAll()
-        {
             ColorManager colorManager = new ColorManager(new EfColorDal());
-            var result = colorManager.GetAll();
-            if (result.Success)
-            {
-                foreach (var color in result.Data)
-                {
-                    Console.WriteLine(color.ColorName);
-                }
-            }
-            else
-            {
-                Console.WriteLine(result.Message);
-            }
+            UserManager userManager = new UserManager(new EfUserDal());
+            CustomerManager customerManager = new CustomerManager(new EfCustomerDal());
+            RentalManager rentalManager = new RentalManager(new EfRentalDal());
+
+            //CarTestFirst();
+            AddingTest(userManager, customerManager, rentalManager);
+            //BrandTestFirst();
+
         }
 
-        private static void GetCarDetailsTest()
+        private static void AddingTest(UserManager userManager, CustomerManager customerManager, RentalManager rentalManager)
+        {
+            userManager.Add(new User { Id = 1, FirstName = "Mert", LastName = "Çakır", Email = "mertckrrr@gmail.com", Password = "123456" });
+
+            customerManager.Add(new Customer { Id = 1, UserId = 1, CompanyName = "CKR Ltd" });
+
+            rentalManager.Add(new Rental { Id = 1, CarId = 2, CustomerId = 1, RentDate = new DateTime(2021, 02, 20), ReturnDate = new DateTime(2021, 01, 10) });
+
+            
+        }
+
+        private static void BrandTestFirst()
+        {
+            BrandManager brandManager = new BrandManager(new EfBrandDal());
+            //brandManager.Add(new Brand { BrandName = "volvo" });
+            //brandManager.Delete( new Brand { BrandId=1002});
+        }
+
+        private static void CarTestFirst()
         {
             CarManager carManager = new CarManager(new EfCarDal());
-            var result = carManager.GetCarDetails();
 
-            if (result.Success)
+
+           carManager.Add(new Car { BrandId = 1, ColorId = 2, DailyPrice = 200, ModelYear = 2018, Description = "Otomatik Dizel" });
+
+            var result = carManager.GetCarDetails();
+            if (result.Success == true)
             {
                 foreach (var car in result.Data)
                 {
-                    Console.WriteLine(car.BrandName + " / " + car.ColorName + " / " + car.DailyPrice + " / " + car.Description);
+                    Console.WriteLine(car.Description + " / " + car.BrandName + " / " + car.ColorName + " / " + car.DailyPrice);
                 }
-
             }
-
             else
             {
                 Console.WriteLine(result.Message);
             }
+
+           
         }
+      
+     
     }
 }

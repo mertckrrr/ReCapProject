@@ -2,7 +2,6 @@
 using DataAccess.Abstract;
 using Entities.Concrete;
 using Entities.DTOs;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,24 +17,23 @@ namespace DataAccess.Concrete.EntityFramework
             using (ReCapProjectDbContext context = new ReCapProjectDbContext())
             {
                 var result = from r in filter is null ? context.Rentals : context.Rentals.Where(filter)
-                             join c in context.Cars
-                             on r.CarId equals c.CarId
+                             join ca in context.Cars
+                             on r.CarId equals ca.CarId
                              join cu in context.Customers
                              on r.CustomerId equals cu.Id
                              join u in context.Users
                              on cu.UserId equals u.Id
-                             join b in context.Brands
-                             on c.BrandId equals b.BrandId
                              select new RentalDetailDto
                              {
-                                 RentalId = r.Id,
-                                 CarId = c.CarId,
+                                 Id = r.Id,
+                                 Description = ca.Description,
                                  CustomerName = cu.CompanyName,
-                                 UserName = u.FirstName + " " + u.LastName,
-                                 BrandName = b.BrandName,
+                                 CarId = ca.CarId,
                                  RentDate = r.RentDate,
-                                 ReturnDate = r.ReturnDate
+                                 ReturnDate = r.ReturnDate,
+                                 UserName = u.FirstName + " " + u.LastName
                              };
+
                 return result.ToList();
             }
         }

@@ -24,12 +24,19 @@ namespace Core.DataAccess.EntityFramework
 
         public void Delete(TEntity entity)
         {
-
             using (TContext context = new TContext())
             {
                 var deletedEntity = context.Entry(entity);
                 deletedEntity.State = EntityState.Deleted;
                 context.SaveChanges();
+            }
+        }
+
+        public TEntity Get(Expression<Func<TEntity, bool>> filter)
+        {
+            using (TContext context = new TContext())
+            {
+                return context.Set<TEntity>().SingleOrDefault(filter);
             }
         }
 
@@ -40,14 +47,6 @@ namespace Core.DataAccess.EntityFramework
                 return filter == null
                     ? context.Set<TEntity>().ToList()
                     : context.Set<TEntity>().Where(filter).ToList();
-            }
-        }
-
-        public TEntity GetById(Expression<Func<TEntity, bool>> filter)
-        {
-            using (TContext context = new TContext())
-            {
-                return context.Set<TEntity>().SingleOrDefault(filter);
             }
         }
 

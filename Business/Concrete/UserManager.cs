@@ -13,31 +13,30 @@ namespace Business.Concrete
     {
         IUserDal _userDal;
 
-        public UserManager(IUserDal userdal)
+        public UserManager(IUserDal userDal)
         {
-            _userDal = userdal;
+            _userDal = userDal;
         }
 
         public IResult Add(User user)
         {
-            if (user.FirstName.Length < 3 || user.LastName.Length < 3)
+            if (user.FirstName.Length < 2)
             {
-                return new ErrorResult(Messages.UserNameInvalid);
+                return new ErrorResult(Messages.UserFirstNameInvalid);
             }
-
             _userDal.Add(user);
-            return new SuccessResult(Messages.UserAdded);
-        }
 
-        public IResult Update(User user)
-        {
-            _userDal.Update(user);
-            return new SuccessResult(Messages.UserUpdated);
+            return new SuccessResult(Messages.UserAdded);
         }
 
         public IResult Delete(User user)
         {
+            if (user.FirstName.Length < 2)
+            {
+                return new ErrorResult(Messages.UserFirstNameInvalid);
+            }
             _userDal.Delete(user);
+
             return new SuccessResult(Messages.UserDeleted);
         }
 
@@ -51,9 +50,15 @@ namespace Business.Concrete
             return new SuccessDataResult<List<User>>(_userDal.GetAll(), Messages.UsersListed);
         }
 
-        public IDataResult<User> GetById(int userId)
+        public IResult Update(User user)
         {
-            return new SuccessDataResult<User>(_userDal.Get(p => p.Id == userId));
+            if (user.FirstName.Length < 2)
+            {
+                return new ErrorResult(Messages.UserFirstNameInvalid);
+            }
+            _userDal.Update(user);
+
+            return new SuccessResult(Messages.UserUpdated);
         }
     }
 }

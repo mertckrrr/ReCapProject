@@ -2,7 +2,6 @@
 using Business.Constants;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
-using DataAccess.Concrete.InMemory;
 using Entities.Concrete;
 using System;
 using System.Collections.Generic;
@@ -21,22 +20,23 @@ namespace Business.Concrete
 
         public IResult Add(Brand brand)
         {
-            if (brand.BrandName.Length < 3)
+            if (brand.BrandName.Length < 2)
             {
                 return new ErrorResult(Messages.BrandNameInvalid);
             }
-
             _brandDal.Add(brand);
+
             return new SuccessResult(Messages.BrandAdded);
         }
-        public IResult Update(Brand brand)
-        {
-            _brandDal.Update(brand);
-            return new SuccessResult(Messages.BrandUpdated);
-        }
+
         public IResult Delete(Brand brand)
         {
+            if (brand.BrandName.Length < 2)
+            {
+                return new ErrorResult(Messages.BrandNameInvalid);
+            }
             _brandDal.Delete(brand);
+
             return new SuccessResult(Messages.BrandDeleted);
         }
 
@@ -52,7 +52,18 @@ namespace Business.Concrete
 
         public IDataResult<Brand> GetById(int brandId)
         {
-            return new SuccessDataResult<Brand>(_brandDal.Get(p => p.BrandId == brandId));
+            return new SuccessDataResult<Brand>(_brandDal.Get(b => b.BrandId == brandId));
+        }
+
+        public IResult Update(Brand brand)
+        {
+            if (brand.BrandName.Length < 2)
+            {
+                return new ErrorResult(Messages.BrandNameInvalid);
+            }
+            _brandDal.Update(brand);
+
+            return new SuccessResult(Messages.BrandUpdated);
         }
     }
 }

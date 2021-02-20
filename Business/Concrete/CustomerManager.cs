@@ -13,30 +13,30 @@ namespace Business.Concrete
     {
         ICustomerDal _customerDal;
 
-        public CustomerManager(ICustomerDal customerdal)
+        public CustomerManager(ICustomerDal customerDal)
         {
-            _customerDal = customerdal;
+            _customerDal = customerDal;
         }
+
         public IResult Add(Customer customer)
         {
-            if (customer.CompanyName.Length < 3)
+            if (customer.CompanyName.Length < 2)
             {
-                return new ErrorResult(Messages.CustomerNameInvalid);
+                return new ErrorResult(Messages.CustomerCompanyNameInvalid);
             }
-
             _customerDal.Add(customer);
-            return new SuccessResult(Messages.CustomerAdded);
-        }
 
-        public IResult Update(Customer customer)
-        {
-            _customerDal.Update(customer);
-            return new SuccessResult(Messages.CustomerUpdated);
+            return new SuccessResult(Messages.CustomerAdded);
         }
 
         public IResult Delete(Customer customer)
         {
+            if (customer.CompanyName.Length < 2)
+            {
+                return new ErrorResult(Messages.CustomerCompanyNameInvalid);
+            }
             _customerDal.Delete(customer);
+
             return new SuccessResult(Messages.CustomerDeleted);
         }
 
@@ -50,9 +50,15 @@ namespace Business.Concrete
             return new SuccessDataResult<List<Customer>>(_customerDal.GetAll(), Messages.CustomersListed);
         }
 
-        public IDataResult<Customer> GetById(int customerId)
+        public IResult Update(Customer customer)
         {
-            return new SuccessDataResult<Customer>(_customerDal.Get(p => p.Id == customerId));
+            if (customer.CompanyName.Length < 2)
+            {
+                return new ErrorResult(Messages.CustomerCompanyNameInvalid);
+            }
+            _customerDal.Update(customer);
+
+            return new SuccessResult(Messages.CustomerUpdated);
         }
     }
 }
